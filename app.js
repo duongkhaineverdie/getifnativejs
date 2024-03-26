@@ -11,6 +11,11 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 const TOKEN = "962416910cd8f4";
 const SECRET_KEYS = ["0]ZI%m:4W0FS>M>", "baf<xm%`K;yk=Gs", "uoih%[ST]9XT?]4"];
 
+function isValidIP(ip) {
+  const ipRegex = /^([0-9]{1,3}\.){3}[0-9]{1,3}$/;
+  return ipRegex.test(ip.trim());
+}
+
 app.post("/getifnative", async (req, res) => {
   // Ensure request is sent with JSON data
   if (!req.is('json')) {
