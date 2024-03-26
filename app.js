@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser'); // Assuming you're using body-parser
+const request = require('request-promise'); // Import request-promise
 
 const app = express();
 const port = process.env.PORT || 3000; // Use port from environment variable
