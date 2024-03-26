@@ -40,7 +40,15 @@ app.post("/getifnative", async (req, res) => {
   }
 
   // Assuming the proxy server sets a header named 'X-Forwarded-For'
-  let userIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  let userIp = req.headers['x-forwarded-for'];
+  
+  // Extract the first valid IP address
+  if (userIp) {
+    const ipList = userIp.split(',');
+    userIp = ipList.find(ip => isValidIP(ip)); // Use isValidIP function to check validity
+  } else {
+    userIp = req.socket.remoteAddress;
+  }
 
   // Construct the IP info URL
   const url = `https://ipinfo.io/${userIp}/json?token=${TOKEN}`;
