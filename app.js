@@ -1,0 +1,55 @@
+const express = require('express');
+const request = require('request-promise'); // Promise-based request library
+
+const app = express();
+
+// Replace YOUR_TOKEN with your token
+const TOKEN = "962416910cd8f4";
+
+// Replace YOUR_SECRET_KEYS with an array of valid secret keys
+const SECRET_KEYS = ["0]ZI%m:4W0FS>M>", "baf<xm%`K;yk=Gs", "uoih%[ST]9XT?]4"];
+
+app.post("/getifnative", async (req, res) => {
+  // Ensure request is sent with JSON data
+  if (!req.is('json')) {
+    return res.status(400).json({ error: "Missing secret key in request body" });
+  }
+
+  // Try to get the JSON data
+  let data;
+  try {
+    data = req.body;
+  } catch (err) {
+    return res.status(400).json({ error: "Missing secret key in request body" });
+  }
+
+  // Check if 'secret_key' key exists in the JSON
+  if (!data.hasOwnProperty('secret_key')) {
+    return res.status(401).json({ error: "Missing secret key in request body" });
+  }
+
+  // Get the secret key from the request body
+  const secretKey = data.secret_key;
+
+  // Validate the secret key against the list
+  if (!SECRET_KEYS.includes(secretKey)) {
+    return res.status(401).json({ error: "Invalid secret key" });
+  }
+
+  // Assuming the proxy server sets a header named 'X-Forwarded-For'
+  let userIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+  // Construct the IP info URL
+  const url = `https://ipinfo.io/${userIp}/json?token=${TOKEN}`;
+
+  try {
+    const response = await request.get(url, { json: true }); // Use JSON response
+    return res.json({ country_code: response.country });
+  } catch (error) {
+    console.error("Error fetching IP info:", error);
+    return res.status(500).json({ error: "Lỗi khi truy cập API ipinfo.io" });
+  }
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server listening on port ${port}`));
