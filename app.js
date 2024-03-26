@@ -1,12 +1,13 @@
 const express = require('express');
-const request = require('request-promise'); // Promise-based request library
+const bodyParser = require('body-parser'); // Assuming you're using body-parser
 
 const app = express();
+const port = process.env.PORT || 3000; // Use port from environment variable
 
-// Replace YOUR_TOKEN with your token
+app.use(bodyParser.json()); // Parse incoming JSON requests
+
+// Replace these values with your actual token and secret keys
 const TOKEN = "962416910cd8f4";
-
-// Replace YOUR_SECRET_KEYS with an array of valid secret keys
 const SECRET_KEYS = ["0]ZI%m:4W0FS>M>", "baf<xm%`K;yk=Gs", "uoih%[ST]9XT?]4"];
 
 app.post("/getifnative", async (req, res) => {
@@ -20,6 +21,7 @@ app.post("/getifnative", async (req, res) => {
   try {
     data = req.body;
   } catch (err) {
+    console.error("Error parsing request body:", err);
     return res.status(400).json({ error: "Missing secret key in request body" });
   }
 
@@ -51,5 +53,4 @@ app.post("/getifnative", async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server listening on port ${port}`));
