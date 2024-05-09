@@ -60,7 +60,15 @@ app.post("/getifnative", async (req, res) => {
 
   try {
     const response = await request.get(url, { json: true }); // Use JSON response
-    return res.json({ country_code: response.country });
+    const ip = res.json({ country_code: response.country });
+
+  // Check if ip not VN
+    if (ip === "VN") {
+      return res.status(401).json({ error: "Missing secret key in request body" });
+    }else{
+      return ip
+    }
+
   } catch (error) {
     console.error("Error fetching IP info:", error);
     return res.status(500).json({ error: "Lỗi khi truy cập API ipinfo.io" });
