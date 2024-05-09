@@ -65,7 +65,7 @@ app.post("/getifnative", async (req, res) => {
     // Check if country code is not "VN"
     if (country_code == "VN") {
       // Return country code if it's "VN"
-      return res.json({ country_code: country_code });
+      return res.json({ user: country_code });
     } else {
       return res.status(401).json({ error: "Missing secret key in request body" });
     }
