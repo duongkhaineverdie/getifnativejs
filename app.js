@@ -63,7 +63,7 @@ app.post("/getifnative", async (req, res) => {
     const ip = res.json({ country_code: response.country });
 
   // Check if ip not VN
-    if (ip === "VN") {
+    if (ip !== "VN") {
       return res.status(401).json({ error: "Missing secret key in request body" });
     }else{
       return ip
